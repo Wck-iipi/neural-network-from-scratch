@@ -68,8 +68,8 @@ class TestModel:
         assert np.array_equal(a, np.array([14]))
 
 def test_ReLU():
-    assert model.ReLU(1) == 1
-    assert model.ReLU(-1) == 0
+    r = model.ReLU(np.array([1, -1]))
+    assert np.array_equal(r, np.array([1, 0]))
 
 def test_softmax():
     s = model.softmax(np.array([1, 2, 3]))
