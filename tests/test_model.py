@@ -49,10 +49,10 @@ class TestModel:
 
         self.model = model.Model([self.layer1, self.layer2, self.layer3])
 
-        a : np.ndarray = self.model.compute([1, 1])
+        a : np.ndarray = self.model.compute(np.array([1, 1]))
         assert np.array_equal(a, np.array([103]))
 
-    def test_compute(self):
+    def test_compute2(self):
         self.layer1.w = np.array([[1, 2], [1, 1]])
         self.layer1.b = np.array([1, 2])
 
@@ -64,8 +64,8 @@ class TestModel:
 
         self.model = model.Model([self.layer1, self.layer2, self.layer3])
 
-        a : np.ndarray = self.model.compute([1, 1])
-        assert np.array_equal(a, np.array([13]))
+        a : np.ndarray = self.model.compute(np.array([1, 1]))
+        assert np.array_equal(a, np.array([14]))
 
 def test_ReLU():
     assert model.ReLU(1) == 1

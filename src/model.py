@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from typing import List
 import numpy as np
 
 def ReLU(x):
@@ -27,3 +28,11 @@ class Layer:
             a[r] = self.f(np.dot(self.w[r], x) + self.b[r])
         return a
 
+class Model:
+    def __init__(self, layers: List[Layer]):
+        self.layers = layers
+
+    def compute(self, x: np.ndarray):
+        for layer in self.layers:
+            x = layer.compute(x)
+        return x
