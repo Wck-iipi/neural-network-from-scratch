@@ -7,7 +7,7 @@ import pytest
 # Crossentropy loss
 
 def test_cross_entropy_loss():
-    y = 2
+    y = np.array([0, 1, 0])
     a = np.array([0.1, 0.8, 0.1])
     expected = -np.log(0.1)
     assert expected == cost.cross_entropy_loss(a, y)
