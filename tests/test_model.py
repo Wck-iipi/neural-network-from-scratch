@@ -5,7 +5,7 @@ import src.model as model
 
 class TestLayer:
     def setup_method(self):
-        self.layer : model.Layer = model.Layer(3, model.ReLU)
+        self.layer : model.Layer = model.Layer(3, model.ReLU, model.ReLU_prime)
 
     def teardown_method(self):
         del self.layer
@@ -24,9 +24,9 @@ class TestLayer:
 
 class TestModel:
     def setup_method(self):
-        self.layer1 = model.Layer(2, model.ReLU)
-        self.layer2 = model.Layer(3, model.ReLU)
-        self.layer3 = model.Layer(1, model.ReLU)
+        self.layer1 = model.Layer(2, model.ReLU, model.ReLU_prime)
+        self.layer2 = model.Layer(3, model.ReLU, model.ReLU_prime)
+        self.layer3 = model.Layer(1, model.ReLU, model.ReLU_prime)
 
     def teardown_method(self):
         del self.layer1
