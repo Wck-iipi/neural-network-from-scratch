@@ -3,14 +3,14 @@ from typing import List
 import numpy as np
 
 def ReLU(z: np.ndarray) -> np.ndarray:
-    return np.fromiter([np.max([0, z_i]) for z_i in z], float)
+    return np.array([np.fromiter([np.max([0, z_i]) for z_i in z[0]], float)])
 
 def ReLU_prime(z: np.ndarray) -> np.ndarray:
-    return np.fromiter([0 if z_i <= 0 else 1 for z_i in z], float)
+    return np.array([np.fromiter([0 if z_i <= 0 else 1 for z_i in z[0]], float)])
 
 def softmax(z: np.ndarray) -> np.ndarray:
-    sum = np.sum(np.fromiter([np.exp(z_i) for z_i in z], float))
-    return np.fromiter([np.exp(z_i) / sum for z_i in z], float)
+    sum = np.sum(np.fromiter([np.exp(z_i) for z_i in z[0]], float))
+    return np.array([np.fromiter([np.exp(z_i) / sum for z_i in z[0]], float)])
 
 
 class Layer:
@@ -30,7 +30,14 @@ class Layer:
         if self.w.size == 0:
             self.setWeights(x.shape[0])
 
-        self.z = np.fromiter([np.dot(self.w[i], x) + self.b[i] for i in range(self.n)], float)
+        for i in range(self.n):
+            print("w[i]: ", self.w[i])
+            print("np.transpose(x): ", np.transpose(x))
+            print("np.dot(self.w[i], np.transpose(x)): ", np.dot(self.w[i], np.transpose(x)))
+            print("self.b[i]: ", self.b[i])
+            print("np.dot(self.w[i], np.transpose(x)) + self.b[i]: ", np.dot(self.w[i], np.transpose(x)) + self.b[i])
+        self.z = np.array([np.fromiter([np.dot(self.w[i], np.transpose(x)) + self.b[i] for i in range(self.n)], float)])
+        print("z: ", self.z)
         self.a = self.f(self.z)
         return self.a
 
@@ -39,7 +46,6 @@ class Model:
         self.layers = layers
 
     def compute(self, x: np.ndarray):
-        print(x)
         for layer in self.layers:
             x = layer.compute(x)
         return x

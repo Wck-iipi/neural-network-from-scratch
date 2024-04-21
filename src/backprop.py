@@ -15,19 +15,22 @@ def calculate_dl_db(delta: np.ndarray, z: np.ndarray, activation_prime: Callable
     return np.dot(delta, np.diag(activation_prime(z)))
 
 def calculate_dl_da_previous(W: np.ndarray, delta: np.ndarray, z:np.ndarray, activation_prime: Callable[[np.ndarray], np.ndarray]):
-    return np.dot(W, np.dot(delta, np.diag(activation_prime(z))))
+    return np.dot(np.transpose(W), np.dot(delta, np.diag(activation_prime(z))))
 
 def backpropagation(model: Model, loss_function_prime: Callable[[np.ndarray, np.ndarray], np.ndarray], Y: np.ndarray):
     # Assuming forward propagation has been done
     dl_da = loss_function_prime(model.layers[-1].a, Y)
-    print(dl_da)
 
-    dl_db = np.array([calculate_dl_db(dl_da, model.layers[-1].z, model.layers[-1].f_prime)])
-    dl_dW = np.array([calculate_dl_dW(model.layers[-2].a, dl_da, model.layers[-1].z, model.layers[-1].f)])
+    dl_db = calculate_dl_db(dl_da, model.layers[-1].z, model.layers[-1].f_prime)
+    dl_dW = calculate_dl_dW(model.layers[-2].a, dl_da, model.layers[-1].z, model.layers[-1].f_prime)
 
-    for i in range(len(model.layers) - 2, 0, -1):
-        dl_da = calculate_dl_da_previous(model.layers[i].w, dl_da, model.layers[i].z, model.layers[i].f_prime)
-        np.append(dl_db, calculate_dl_db(dl_da, model.layers[i].z, model.layers[i].f_prime))
-        np.append(dl_dW, calculate_dl_dW(model.layers[i-1].a, dl_da, model.layers[i].z, model.layers[i].f))
+    dl_db_collection = np.array([dl_db])
+    dl_dW_collection = np.array([dl_dW])
+    for i in range(len(model.layers) - 2, -1, -1):
+        dl_da = calculate_dl_da_previous(model.layers[i+1].w, dl_da, model.layers[i+1].z, model.layers[i+1].f_prime)
+        dl_db = calculate_dl_db(dl_da, model.layers[i].z, model.layers[i].f_prime)
+        dl_dW = calculate_dl_dW(model.layers[i].a, dl_da, model.layers[i].z, model.layers[i].f_prime)
+        np.append(dl_db_collection, dl_db)
+        np.append(dl_dW_collection, dl_dW)
 
-    return dl_dW, dl_db
+    return dl_dW_collection, dl_db_collection

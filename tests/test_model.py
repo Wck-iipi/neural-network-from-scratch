@@ -3,6 +3,7 @@ import pytest
 
 import src.model as model
 
+#TODO add b as 2d array depicting dimensions.
 class TestLayer:
     def setup_method(self):
         self.layer : model.Layer = model.Layer(3, model.ReLU, model.ReLU_prime)
